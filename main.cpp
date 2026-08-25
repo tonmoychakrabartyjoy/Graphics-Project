@@ -20,13 +20,18 @@ bool carMoving = false;
 bool carVisible = false;
 
 
-float buss = 300;
+float buss = 280;
+float bussy = 60;
+float busss = 2.5;
 
 
 bool bussMoving = false;
 bool bussVisible = false;
 
 float bussTarget = 100;
+float bussTargety = 44;
+float bussTargets = 3.8;
+
 
 void init()
 {
@@ -629,7 +634,7 @@ void carvisi(){
 void bussvisi(){
     if(bussVisible)
     {
-        drawBus(buss, 48, 3.5);
+        drawBus(buss, bussy, busss);
     }
 }
 
@@ -801,12 +806,16 @@ void updateB(int value)
     if(bussMoving && bussVisible)
     {
         buss -= 0.3;
+        bussy -= 0.02469;
+        busss += 0.002292;
 
 
         // Stop at target position
-        if(buss <= bussTarget)
+        if(buss <= bussTarget )
         {
             buss = bussTarget;
+            bussy = bussTargety;
+            busss = 4;
             bussMoving = false;
         }
 
@@ -844,9 +853,13 @@ void keyboard(unsigned char key, int x, int y)
     {
         // Start bus from right side
         buss = 300;
+        bussy = 60;
+        busss = 2.5;
 
 
         bussTarget = 100;
+        bussTargety = 44;
+        bussTargets = 4;
 
         bussVisible = true;
         bussMoving = true;
@@ -859,9 +872,11 @@ void keyboard(unsigned char key, int x, int y)
     if(key == 'g' || key == 'G')
     {
         // Start bus from position 100
-        buss = 100;
+        buss = bussTarget;
+        bussy = bussTargety;
+        busss = 4;
 
-        bussTarget = -70;
+        bussTarget = -80;
 
         bussVisible = true;
         bussMoving = true;
