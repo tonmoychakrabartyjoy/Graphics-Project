@@ -3,6 +3,8 @@
 using namespace std;
 
 
+//Car
+
 float car1X = 260;
 float car2X = 280;
 float car3X = 300;
@@ -20,13 +22,33 @@ bool carMoving = false;
 bool carVisible = false;
 
 
-float buss = 300;
+//Buss
+
+float buss = 280;
+float bussy = 60;
+float busss = 2.5;
 
 
 bool bussMoving = false;
 bool bussVisible = false;
 
 float bussTarget = 100;
+float bussTargety = 44;
+float bussTargets = 3.8;
+
+
+// Man
+float man1X = 130.0f, man1Y = 20.0f, man1S = 1.3f;
+float man2X = 152.0f, man2Y = 19.0f, man2S = 1.4f;
+float man3X = 145.0f, man3Y = 22.0f, man3S = 1.4f;
+float man4X = 138.0f, man4Y = 21.0f, man4S = 1.25f;
+
+bool manMoving = false;
+bool manVisible = true;
+
+// Animation progress
+float manProgress = 0.0f;
+
 
 void init()
 {
@@ -94,24 +116,53 @@ void drawTree(float x, float y, float scale)
 
 void roadB(float x, float y, float z)
 {
-    glBegin(GL_POLYGON);
+    glBegin(GL_QUADS);
+
         glColor3f(0.95, 0.20, 0.05);
 
-        glVertex2f(x - 0.0 * z, y + 0.0 * z);
-        glVertex2f(x - 0.0 * z, y + 2.0 * z);
-        glVertex2f(x - 1.0 * z, y + 3.2 * z);
-        glVertex2f(x - 2.0 * z, y + 3.2 * z);
-        glVertex2f(x - 3.0 * z, y + 2.0 * z);
-        glVertex2f(x - 3.0 * z, y + 0.0 * z);
+        // 1st quad
+        glVertex2f(x - 1.0 * z, y + 0.0 * z);
+        glVertex2f(x - 1.0 * z, y + 4.0 * z);
+        glVertex2f(x - 1.2 * z, y + 4.0 * z);
+        glVertex2f(x - 1.2 * z, y + 0.0 * z);
+
+
+        // 2nd quad
+        glVertex2f(x - 2.4 * z, y + 0.0 * z);
+        glVertex2f(x - 2.4 * z, y + 4.0 * z);
+        glVertex2f(x - 2.4 * z, y + 4.0 * z);
+        glVertex2f(x - 2.4 * z, y + 0.0 * z);
+
+
+        // 3rd quad
+        glVertex2f(x - 0.8 * z, y + 3.6 * z);
+        glVertex2f(x - 0.8 * z, y + 4.0 * z);
+        glVertex2f(x - 4.2 * z, y + 4.0 * z);
+        glVertex2f(x - 4.2 * z, y + 3.6 * z);
+
+
+        // 4th quad
+        glVertex2f(x - 4.0 * z, y + 0.0 * z);
+        glVertex2f(x - 4.0 * z, y + 4.0 * z);
+        glVertex2f(x - 4.0 * z, y + 4.0 * z);
+        glVertex2f(x - 3.8 * z, y + 0.0 * z);
+
+
+        // 5th quad
+        glVertex2f(x - 4.0 * z, y + 2.0 * z);
+        glVertex2f(x - 1.0 * z, y + 2.0 * z);
+        glVertex2f(x - 1.0 * z, y + 2.4 * z);
+        glVertex2f(x - 4.0 * z, y + 2.4 * z);
+
     glEnd();
 }
 
 
 void drawCar(float x, float y, float s)
 {
-
+    // Lower body
     glBegin(GL_QUADS);
-        glColor3f(0.05, 0.25, 0.55);
+        glColor3f(0.95, 0.75, 0.05);
 
         glVertex2f(x,          y);
         glVertex2f(x + 10*s,   y);
@@ -119,9 +170,9 @@ void drawCar(float x, float y, float s)
         glVertex2f(x,          y + 3*s);
     glEnd();
 
-
+    // Upper roof/cabin
     glBegin(GL_POLYGON);
-        glColor3f(0.10, 0.50, 0.85);
+        glColor3f(1.0, 0.85, 0.15);
 
         glVertex2f(x + 2*s, y + 3*s);
         glVertex2f(x + 3*s, y + 5*s);
@@ -129,30 +180,29 @@ void drawCar(float x, float y, float s)
         glVertex2f(x + 8*s, y + 3*s);
     glEnd();
 
-
-
+    // Rear window: Tinted blue-gray
     glBegin(GL_QUADS);
-        glColor3f(0.15, 0.25, 0.35);
+        glColor3f(0.2, 0.3, 0.4);
 
         glVertex2f(x + 5.1*s, y + 3.2*s);
-        glVertex2f(x + 7*s,   y + 3.2*s);
+        glVertex2f(x + 7.0*s, y + 3.2*s);
         glVertex2f(x + 6.6*s, y + 4.5*s);
         glVertex2f(x + 5.1*s, y + 4.5*s);
     glEnd();
 
-
+    // Front window: Tinted blue-gray
     glBegin(GL_QUADS);
-        glColor3f(0.15, 0.25, 0.35);
+        glColor3f(0.2, 0.3, 0.4);
 
-        glVertex2f(x + 3*s,   y + 3.2*s);
+        glVertex2f(x + 3.0*s, y + 3.2*s);
         glVertex2f(x + 4.9*s, y + 3.2*s);
         glVertex2f(x + 4.9*s, y + 4.5*s);
         glVertex2f(x + 3.4*s, y + 4.5*s);
     glEnd();
 
-
+    // Lower trim stripe
     glBegin(GL_QUADS);
-        glColor3f(0.15, 0.25, 0.35);
+        glColor3f(0.15, 0.15, 0.15);
 
         glVertex2f(x,          y + 0.4*s);
         glVertex2f(x + 10*s,   y + 0.4*s);
@@ -607,21 +657,21 @@ void carvisi(){
     {
         drawCar(car1X, 49, 1.4);
 
-        drawCar(car8x, 45, 1.9);
+        drawCar(car8x, 45, 2.5);
 
-        drawCar(car2X, 40, 1.5);
+        drawCar(car2X, 40, 2.5);
 
         drawCar(car3X, 49, 1.3);
 
-        drawCar(car7x, 42, 1.6);
+        drawCar(car7x, 42, 2.4);
 
         drawCar(car4X, 70, 2.2);
 
-        drawCar(car5X, 75, 1.9);
+        drawCar(car5X, 75, 2.9);
 
-        drawCar(car6X, 73, 2);
+        drawCar(car6X, 73, 2.5);
 
-        drawCar(car9x, 72, 1.8);
+        drawCar(car9x, 72, 2.8);
     }
 }
 
@@ -629,51 +679,414 @@ void carvisi(){
 void bussvisi(){
     if(bussVisible)
     {
-        drawBus(buss, 48, 3.5);
+        drawBus(buss, bussy, busss);
     }
 }
 
 
-void background(){
+void drawMan(float x, float y, float s) {
+    const float PI = 3.14159265358979323846f;
+    int segments = 40;
+
+    glPushMatrix();
+    glTranslatef(x, y, 0.0f);
+    glScalef(s, s, 1.0f);
+
+    glColor3f(0.0f, 0.0f, 0.0f);
+    glBegin(GL_QUADS);
+        glVertex2f(6.8f, 2.0f);
+        glVertex2f(9.5f, 2.0f);
+        glVertex2f(9.5f, 10.0f);
+        glVertex2f(6.8f, 10.0f);
+        glVertex2f(10.5f, 2.0f);
+        glVertex2f(13.2f, 2.0f);
+        glVertex2f(13.2f, 10.0f);
+        glVertex2f(10.5f, 10.0f);
+    glEnd();
+
+    glBegin(GL_QUADS);
+        glVertex2f(5.0f, 0.0f);
+        glVertex2f(9.6f, 0.0f);
+        glVertex2f(9.6f, 2.0f);
+        glVertex2f(5.0f, 2.0f);
+        glVertex2f(10.4f, 0.0f);
+        glVertex2f(15.0f, 0.0f);
+        glVertex2f(15.0f, 2.0f);
+        glVertex2f(10.4f, 2.0f);
+    glEnd();
+
+    glColor3f(0.96f, 0.77f, 0.62f);
+    glBegin(GL_QUADS);
+        //Hand
+        glVertex2f(4.2f, 11.0f);
+        glVertex2f(6.0f, 11.0f);
+        glVertex2f(6.0f, 13.0f);
+        glVertex2f(4.2f, 13.0f);
+        glVertex2f(14.0f, 11.0f);
+        glVertex2f(15.8f, 11.0f);
+        glVertex2f(15.8f, 13.0f);
+        glVertex2f(14.0f, 13.0f);
+    glEnd();
+
+    glColor3f(0.0f, 0.0f, 0.0f);
+    glLineWidth(1.5f);
+    glBegin(GL_LINE_LOOP);
+        glVertex2f(4.2f, 11.0f);
+        glVertex2f(6.0f, 11.0f);
+        glVertex2f(6.0f, 13.0f);
+        glVertex2f(4.2f, 13.0f);
+    glEnd();
+    glBegin(GL_LINE_LOOP);
+        glVertex2f(14.0f, 11.0f);
+        glVertex2f(15.8f, 11.0f);
+        glVertex2f(15.8f, 13.0f);
+        glVertex2f(14.0f, 13.0f);
+    glEnd();
+
+
+    glColor3f(0.16f, 0.44f, 0.74f);
+    glBegin(GL_QUADS);
+        glVertex2f(4.2f, 13.0f);
+        glVertex2f(6.0f, 13.0f);
+        glVertex2f(6.0f, 22.5f);
+        glVertex2f(4.2f, 22.5f);
+        glVertex2f(14.0f, 13.0f);
+        glVertex2f(15.8f, 13.0f);
+        glVertex2f(15.8f, 22.5f);
+        glVertex2f(14.0f, 22.5f);
+    glEnd();
+
+    glColor3f(0.0f, 0.0f, 0.0f);
+    glBegin(GL_LINE_LOOP);
+        glVertex2f(4.2f, 13.0f);
+        glVertex2f(6.0f, 13.0f);
+        glVertex2f(6.0f, 22.5f);
+        glVertex2f(4.2f, 22.5f);
+    glEnd();
+    glBegin(GL_LINE_LOOP);
+        glVertex2f(14.0f, 13.0f);
+        glVertex2f(15.8f, 13.0f);
+        glVertex2f(15.8f, 22.5f);
+        glVertex2f(14.0f, 22.5f);
+    glEnd();
+
+
+    glColor3f(0.16f, 0.44f, 0.74f);
+    glBegin(GL_QUADS);
+        glVertex2f(5.9f, 10.0f);
+        glVertex2f(14.1f, 10.0f);
+        glVertex2f(14.1f, 22.0f);
+        glVertex2f(5.9f, 22.0f);
+    glEnd();
+
+    glColor3f(0.0f, 0.0f, 0.0f);
+    glBegin(GL_LINE_LOOP);
+        glVertex2f(5.9f, 10.0f);
+        glVertex2f(14.1f, 10.0f);
+        glVertex2f(14.1f, 22.0f);
+        glVertex2f(5.9f, 22.0f);
+    glEnd();
+
+
+    glColor3f(0.16f, 0.44f, 0.74f);
+    glBegin(GL_TRIANGLE_FAN);
+        glVertex2f(10.0f, 21.0f);
+        for (int i = 0; i <= segments; i++) {
+            float a = PI * (float)i / (float)segments;
+            glVertex2f(10.0f + 4.1f * cosf(a), 21.0f + 4.1f * sinf(a));
+        }
+    glEnd();
+
+    glColor3f(0.0f, 0.0f, 0.0f);
+    glLineWidth(1.5f);
+    glBegin(GL_LINE_STRIP);
+        for (int i = 0; i <= segments; i++) {
+            float a = PI * (float)i / (float)segments;
+            glVertex2f(10.0f + 4.1f * cosf(a), 21.0f + 4.1f * sinf(a));
+        }
+    glEnd();
+
+    glColor3f(0.96f, 0.77f, 0.62f);
+    glBegin(GL_TRIANGLE_FAN);
+        glVertex2f(10.0f, 29.5f);
+        for (int i = 0; i <= segments; i++) {
+            float a = 2.0f * PI * (float)i / (float)segments;
+            glVertex2f(10.0f + 4.3f * cosf(a), 29.5f + 4.3f * sinf(a));
+        }
+    glEnd();
+
+    glColor3f(0.0f, 0.0f, 0.0f);
+    glLineWidth(2.0f);
+    glBegin(GL_LINE_LOOP);
+        for (int i = 0; i <= segments; i++) {
+            float a = 2.0f * PI * (float)i / (float)segments;
+            glVertex2f(10.0f + 4.3f * cosf(a), 29.5f + 4.3f * sinf(a));
+        }
+    glEnd();
+
+    glPopMatrix();
+}
+
+
+void moveMan()
+{
+    if(manMoving && manVisible)
+    {
+        // Increase animation progress
+        manProgress += 0.01f;
+
+        // Stop progress at 1
+        if(manProgress >= 1.0f)
+        {
+            manProgress = 1.0f;
+        }
+
+        // Man 1
+    man1X = 130.0f + (150.0f - 130.0f) * manProgress;
+    man1Y = 20.0f + (48.0f - 20.0f) * manProgress;
+    man1S = 1.3f + (0.5f - 1.3f) * manProgress;
+
+    // Man 2
+    man2X = 152.0f + (150.0f - 152.0f) * manProgress;
+    man2Y = 19.0f + (48.0f - 19.0f) * manProgress;
+    man2S = 1.4f + (0.5f - 1.4f) * manProgress;
+
+    // Man 3
+    man3X = 145.0f + (150.0f - 145.0f) * manProgress;
+    man3Y = 22.0f + (48.0f - 22.0f) * manProgress;
+    man3S = 1.4f + (0.5f - 1.4f) * manProgress;
+
+    // Man 4
+    man4X = 138.0f + (150.0f - 138.0f) * manProgress;
+    man4Y = 21.0f + (48.0f - 21.0f) * manProgress;
+    man4S = 1.25f + (0.5f - 1.25f) * manProgress;
+
+        // When animation reaches the final position
+        if(manProgress >= 1.0f)
+        {
+            // Set exact final position
+            man1X = 150.0f;
+            man1Y = 48.0f;
+            man1S = 0.5f;
+
+            man2X = 150.0f;
+            man2Y = 48.0f;
+            man2S = 0.5f;
+
+            man3X = 150.0f;
+            man3Y = 48.0f;
+            man3S = 0.5f;
+
+            man4X = 150.0f;
+            man4Y = 48.0f;
+            man4S = 0.5f;
+
+            // Hide after reaching final position
+            manMoving = false;
+            manVisible = false;
+        }
+
+        glutPostRedisplay();
+    }
+}
+
+void manvisi(){
+    if(manVisible)
+    {
+        drawMan(man1X, man1Y, man1S);
+        drawMan(man2X, man2Y, man2S);
+        drawMan(man3X, man3Y, man3S);
+        drawMan(man4X, man4Y, man4S);
+    }
+}
+
+
+
+void drawCircle(float cx, float cy, float rad, int seg) {
+    int i;
+    glBegin(GL_POLYGON);
+    for (i = 0; i < seg; i++) {
+        float angle = 2.0f * 3.1416f * i / seg;
+        glVertex2f(cx + rad * cos(angle), cy + rad * sin(angle));
+    }
+    glEnd();
+}
+
+void drawCloud(float x, float y) {
+    glColor3f(1.0f, 1.0f, 1.0f);
+    drawCircle(x, y, 5.0f, 20);
+    drawCircle(x + 6.0f, y + 2.0f, 6.5f, 20);
+    drawCircle(x + 12.0f, y, 5.0f, 20);
+}
+
+
+// Grass
+void drawGrass(float x, float y, float z)
+{
+    // Main grass color
+    glColor3f(0.45, 0.75, 0.12);
+
+    // Left long blade
+    glBegin(GL_POLYGON);
+        glVertex2f(x, y);
+        glVertex2f(x - 1.2*z, y + 4.5*z);
+        glVertex2f(x - 0.7*z, y + 4.2*z);
+        glVertex2f(x + 0.2*z, y + 0.5*z);
+    glEnd();
+
+    // Left middle blade
+    glBegin(GL_POLYGON);
+        glVertex2f(x, y);
+        glVertex2f(x - 2.0*z, y + 3.0*z);
+        glVertex2f(x - 1.7*z, y + 3.3*z);
+        glVertex2f(x + 0.1*z, y + 0.4*z);
+    glEnd();
+
+    // Left outer blade
+    glBegin(GL_POLYGON);
+        glVertex2f(x - 0.1*z, y);
+        glVertex2f(x - 2.8*z, y + 2.0*z);
+        glVertex2f(x - 2.5*z, y + 2.3*z);
+        glVertex2f(x + 0.3*z, y + 0.3*z);
+    glEnd();
+
+    // Center tall blade
+    glBegin(GL_POLYGON);
+        glVertex2f(x, y);
+        glVertex2f(x + 0.3*z, y + 5.2*z);
+        glVertex2f(x + 0.7*z, y + 5.5*z);
+        glVertex2f(x + 1.0*z, y + 0.5*z);
+    glEnd();
+
+    // Right tall blade
+    glBegin(GL_POLYGON);
+        glVertex2f(x + 0.3*z, y);
+        glVertex2f(x + 1.8*z, y + 4.8*z);
+        glVertex2f(x + 2.0*z, y + 5.0*z);
+        glVertex2f(x + 1.0*z, y + 0.4*z);
+    glEnd();
+
+    // Right middle blade
+    glBegin(GL_POLYGON);
+        glVertex2f(x + 0.5*z, y);
+        glVertex2f(x + 2.7*z, y + 3.2*z);
+        glVertex2f(x + 2.9*z, y + 3.4*z);
+        glVertex2f(x + 1.0*z, y + 0.3*z);
+    glEnd();
+
+    // Right outer blade
+    glBegin(GL_POLYGON);
+        glVertex2f(x + 0.5*z, y);
+        glVertex2f(x + 3.2*z, y + 2.0*z);
+        glVertex2f(x + 3.4*z, y + 2.2*z);
+        glVertex2f(x + 1.0*z, y + 0.2*z);
+    glEnd();
+
+    // Small front blades - darker green
+    glColor3f(0.30, 0.65, 0.08);
+
+    glBegin(GL_POLYGON);
+        glVertex2f(x - 0.5*z, y);
+        glVertex2f(x - 1.5*z, y + 1.8*z);
+        glVertex2f(x - 1.2*z, y + 2.0*z);
+        glVertex2f(x, y + 0.3*z);
+    glEnd();
+
+    glBegin(GL_POLYGON);
+        glVertex2f(x + 0.2*z, y);
+        glVertex2f(x - 0.3*z, y + 2.2*z);
+        glVertex2f(x, y + 2.5*z);
+        glVertex2f(x + 0.7*z, y + 0.3*z);
+    glEnd();
+
+    glBegin(GL_POLYGON);
+        glVertex2f(x + 0.5*z, y);
+        glVertex2f(x + 1.5*z, y + 2.0*z);
+        glVertex2f(x + 1.8*z, y + 2.2*z);
+        glVertex2f(x + 1.0*z, y + 0.2*z);
+    glEnd();
+}
+
+void background2nd(){
+
+    //sky
+    glBegin(GL_QUADS);
+        glColor3f(0.53, 0.81, 0.98);
+        glVertex2f(0,130);
+        glVertex2f(0,200);
+        glVertex2f(250,200);
+        glVertex2f(250,140);
+    glEnd();
     // Road
     glBegin(GL_QUADS);
         glColor3f(0.20f, 0.20f, 0.20f);
         glVertex2f(250,40);
-        glVertex2f(0,23.2);
+        glVertex2f(0,20);
         glVertex2f(0,96.6);
         glVertex2f(250,80);
     glEnd();
 
 
-    float z = 1.00;
-    for(int i=250; i>3; i-=7){
-        roadB(i, 60, z);
-        z+=0.05;
+    //cloud
+    drawCloud(130,190);
+    drawCloud(145,190);
+    drawCloud(110,180);
+    drawCloud(170,180);
+    drawCloud(90,160);
+    drawCloud(80,190);
+    drawCloud(200,185);
+    drawCloud(50,165);
+    drawCloud(220,180);
 
-        if(i<110){
-            i-=3;
-        }
-    }
 
-
-
+    //Sun
+    glColor3f(1.00, 0.85, 0.10);
+    drawCircle(20, 185, 8, 100);
 
     //front ground
     glBegin(GL_QUADS);
         glColor3f(0.20, 0.60, 0.10);
         glVertex2f(0, 0);
-        glVertex2f(0, 23.2);
+        glVertex2f(0, 20);
         glVertex2f(250, 40);
         glVertex2f(250, 0);
     glEnd();
+
+
+    //grass
+    drawGrass(190, 20, 1.2);
+    drawGrass(195, 18, 1.1);
+    drawGrass(197, 21, 1.3);
+    drawGrass(187, 20, 1.2);
+
+    drawGrass(210, 20, 1.2);
+    drawGrass(215, 18, 1.1);
+    drawGrass(217, 21, 1.3);
+    drawGrass(207, 20, 1.2);
+
+    drawGrass(230, 20, 1.2);
+    drawGrass(235, 18, 1.1);
+    drawGrass(237, 21, 1.3);
+    drawGrass(227, 20, 1.2);
+
+
+
+
+    for (int x = 0; x <= 250; x += 10)
+    {
+        drawGrass(x,     9, 1.2);
+        drawGrass(x + 5,  7, 1.1);
+        drawGrass(x + 7, 10, 1.3);
+        drawGrass(x - 3,  9, 1.2);
+    }
 }
 
 
-void display(){
+void display2nd(){
     glClear(GL_COLOR_BUFFER_BIT);
 
     //Road, ground, roadberiar
-    background();
+    background2nd();
 
 
     //All building and design
@@ -712,8 +1125,24 @@ void display(){
     carvisi();
 
 
+    float z = 1.00;
+    for(int i=250; i>3; i-=7){
+        roadB(i, 60, z);
+        z+=0.05;
+
+        if(i<110){
+            i-=3;
+        }
+    }
+
+
     // Draw Buss
     bussvisi();
+
+
+    //Man visible
+    manvisi();
+
 
 
     glFlush();
@@ -801,12 +1230,16 @@ void updateB(int value)
     if(bussMoving && bussVisible)
     {
         buss -= 0.3;
+        bussy -= 0.02469;
+        busss += 0.002292;
 
 
         // Stop at target position
-        if(buss <= bussTarget)
+        if(buss <= bussTarget )
         {
             buss = bussTarget;
+            bussy = bussTargety;
+            busss = 4;
             bussMoving = false;
         }
 
@@ -815,6 +1248,13 @@ void updateB(int value)
     }
 
     glutTimerFunc(16, updateB, 0);
+}
+
+void updateMan(int value)
+{
+    moveMan();
+
+    glutTimerFunc(16, updateMan, 0);
 }
 
 
@@ -844,9 +1284,13 @@ void keyboard(unsigned char key, int x, int y)
     {
         // Start bus from right side
         buss = 300;
+        bussy = 60;
+        busss = 2.5;
 
 
         bussTarget = 100;
+        bussTargety = 44;
+        bussTargets = 4;
 
         bussVisible = true;
         bussMoving = true;
@@ -859,12 +1303,48 @@ void keyboard(unsigned char key, int x, int y)
     if(key == 'g' || key == 'G')
     {
         // Start bus from position 100
-        buss = 100;
+        buss = bussTarget;
+        bussy = bussTargety;
+        busss = 4;
 
-        bussTarget = -70;
+        bussTarget = -80;
 
         bussVisible = true;
         bussMoving = true;
+
+        glutPostRedisplay();
+    }
+
+
+    //Press M
+    if(key == 'm' || key == 'M')
+    {
+        // Reset Man 1
+        man1X = 130.0f;
+        man1Y = 20.0f;
+        man1S = 1.3f;
+
+        // Reset Man 2
+        man2X = 152.0f;
+        man2Y = 19.0f;
+        man2S = 1.4f;
+
+        // Reset Man 3
+        man3X = 145.0f;
+        man3Y = 22.0f;
+        man3S = 1.4f;
+
+        // Reset Man 4
+        man4X = 138.0f;
+        man4Y = 21.0f;
+        man4S = 1.25f;
+
+        // Reset animation
+        manProgress = 0.0f;
+
+        // Show and start movement
+        manVisible = true;
+        manMoving = true;
 
         glutPostRedisplay();
     }
@@ -877,11 +1357,11 @@ int main(int argc, char** argv)
     glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
     glutInitWindowSize(1200, 700);
     glutInitWindowPosition(50, 30);
-    glutCreateWindow("Buss get in scenario");
+    glutCreateWindow("Buss Journey scenario");
 
     init();
 
-    glutDisplayFunc(display);
+    glutDisplayFunc(display2nd);
 
     glutKeyboardFunc(keyboard);
 
@@ -890,6 +1370,9 @@ int main(int argc, char** argv)
 
     // Bus timer
     glutTimerFunc(16, updateB, 0);
+
+    //Man timer
+    glutTimerFunc(16, updateMan, 0);
 
     glutMainLoop();
 
