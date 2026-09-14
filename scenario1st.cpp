@@ -1,8 +1,7 @@
-/*
-
 #include <GL/glut.h>
 #include <math.h>
 
+namespace Scene1 {
 
 #define WIN_W       800.0f
 #define WIN_H       600.0f
@@ -11,12 +10,11 @@
 #define BUS_SPEED   2.0f
 #define BUS_GAP     400.0f
 
-float busOffset = 0.0f;
+static float busOffset = 0.0f;
 
+static void setColor(float r, float g, float b) { glColor3f(r, g, b); }
 
-void setColor(float r, float g, float b) { glColor3f(r, g, b); }
-
-void drawCircle(float cx, float cy, float r, int filled) {
+static void drawCircle(float cx, float cy, float r, int filled) {
     glBegin(filled ? GL_POLYGON : GL_LINE_LOOP);
     for (int i = 0; i < 360; i += 10) {
         float a = i * 3.14159f / 180.0f;
@@ -25,7 +23,7 @@ void drawCircle(float cx, float cy, float r, int filled) {
     glEnd();
 }
 
-void drawRect(float x, float y, float w, float h, int filled) {
+static void drawRect(float x, float y, float w, float h, int filled) {
     glBegin(filled ? GL_QUADS : GL_LINE_LOOP);
     glVertex2f(x, y);
     glVertex2f(x + w, y);
@@ -34,8 +32,7 @@ void drawRect(float x, float y, float w, float h, int filled) {
     glEnd();
 }
 
-
-void drawRotatedRect(float cx, float cy, float w, float h, float angleDeg, int filled) {
+static void drawRotatedRect(float cx, float cy, float w, float h, float angleDeg, int filled) {
     glPushMatrix();
     glTranslatef(cx, cy, 0);
     glRotatef(angleDeg, 0, 0, 1);
@@ -48,14 +45,14 @@ void drawRotatedRect(float cx, float cy, float w, float h, float angleDeg, int f
     glPopMatrix();
 }
 
-void drawLine(float x1, float y1, float x2, float y2) {
+static void drawLine(float x1, float y1, float x2, float y2) {
     glBegin(GL_LINES);
     glVertex2f(x1, y1);
     glVertex2f(x2, y2);
     glEnd();
 }
 
-void drawDashedLineH(float xStart, float xEnd, float y, float dashLen, float gapLen) {
+static void drawDashedLineH(float xStart, float xEnd, float y, float dashLen, float gapLen) {
     float x = xStart;
     while (x < xEnd) {
         float xe = x + dashLen;
@@ -65,28 +62,23 @@ void drawDashedLineH(float xStart, float xEnd, float y, float dashLen, float gap
     }
 }
 
-
-void drawText(float x, float y, const char* text) {
+static void drawText(float x, float y, const char* text) {
     glRasterPos2f(x, y);
     for (const char* c = text; *c != '\0'; c++)
         glutBitmapCharacter(GLUT_BITMAP_HELVETICA_10, *c);
 }
 
-
-
-void drawSky() {
+static void drawSky() {
     setColor(0.55f, 0.78f, 0.95f);
     drawRect(0, 0, 800, 600, 1);
 }
 
-
-void drawSun() {
+static void drawSun() {
     setColor(1.0f, 0.85f, 0.2f);
     drawCircle(700, 520, 35, 1);
 }
 
-
-void drawCloud(float x, float y) {
+static void drawCloud(float x, float y) {
     setColor(1, 1, 1);
     drawCircle(x, y, 18, 1);
     drawCircle(x + 20, y + 8, 22, 1);
@@ -94,9 +86,7 @@ void drawCloud(float x, float y) {
     drawCircle(x + 20, y - 6, 20, 1);
 }
 
-
-
-void drawWindow(float x, float y, float w, float h) {
+static void drawWindow(float x, float y, float w, float h) {
     setColor(0.65f, 0.85f, 1.0f);
     drawRect(x, y, w, h, 1);
     setColor(0.15f, 0.15f, 0.15f);
@@ -105,11 +95,10 @@ void drawWindow(float x, float y, float w, float h) {
     drawLine(x, y + h / 2, x + w, y + h / 2);
 }
 
-void drawBuilding(float x, float y, float w, float h, int cols, int rows,
+static void drawBuilding(float x, float y, float w, float h, int cols, int rows,
                    float r, float g, float b,
                    float accR, float accG, float accB,
                    int hasAntenna, int hasBalcony) {
-
     setColor(r, g, b);
     drawRect(x, y, w, h, 1);
     setColor(0, 0, 0);
@@ -155,9 +144,7 @@ void drawBuilding(float x, float y, float w, float h, int cols, int rows,
     drawRect(x + w / 2 - 16, y + 30, 32, 6, 1);
 }
 
-
-
-void drawSidewalk() {
+static void drawSidewalk() {
     setColor(0.70f, 0.70f, 0.68f);
     drawRect(0, 90, 800, 28, 1);
 
@@ -179,8 +166,7 @@ void drawSidewalk() {
         drawLine(x, 120, x, 138);
 }
 
-
-void drawTree(float x, float y) {
+static void drawTree(float x, float y) {
     setColor(0.42f, 0.26f, 0.1f);
     drawRect(x - 5, y, 10, 34, 1);
     setColor(0, 0, 0);
@@ -195,9 +181,7 @@ void drawTree(float x, float y) {
     drawCircle(x + 10, y + 68, 15, 1);
 }
 
-
-
-void drawBusStopSign(float x, float yBase) {
+static void drawBusStopSign(float x, float yBase) {
     setColor(0.25f, 0.25f, 0.25f);
     drawRect(x - 1.5f, yBase, 3, 26, 1);
 
@@ -211,7 +195,7 @@ void drawBusStopSign(float x, float yBase) {
     drawText(x - 14, yBase + 30, "STOP");
 }
 
-void drawPersonShapes(float x, float y, float r, float g, float b) {
+static void drawPersonShapes(float x, float y, float r, float g, float b) {
     setColor(0.2f, 0.2f, 0.2f);
     drawRect(x - 4, y, 3, 15, 1);
     drawRect(x + 1, y, 3, 15, 1);
@@ -228,9 +212,7 @@ void drawPersonShapes(float x, float y, float r, float g, float b) {
     drawCircle(x, y + 39, 6, 0);
 }
 
-
-
-void drawRoad() {
+static void drawRoad() {
     setColor(0.22f, 0.22f, 0.24f);
     drawRect(0, 0, 800, 90, 1);
 
@@ -246,14 +228,12 @@ void drawRoad() {
         drawRect(340 + i * 18, 5, 10, 80, 1);
 }
 
-void drawBusStopZoneMarking(float xCenter) {
+static void drawBusStopZoneMarking(float xCenter) {
     setColor(0.95f, 0.85f, 0.1f);
     drawDashedLineH(xCenter - 40, xCenter + 40, 87, 10, 6);
 }
 
-
-
-void drawBus(float x, float y, float w, float h, float r, float g, float b) {
+static void drawBus(float x, float y, float w, float h, float r, float g, float b) {
     setColor(r, g, b);
     drawRect(x, y, w, h, 1);
     setColor(0, 0, 0);
@@ -291,9 +271,20 @@ void drawBus(float x, float y, float w, float h, float r, float g, float b) {
     drawCircle(x + w * 0.80f, y, 5, 1);
 }
 
+} // namespace Scene1
 
-void display() {
-    glClear(GL_COLOR_BUFFER_BIT);
+// Exposed interface functions
+void initScene1() {
+    glClearColor(1, 1, 1, 1);
+}
+
+void displayScene1() {
+    using namespace Scene1;
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluOrtho2D(0, 800, 0, 600);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
 
     drawSky();
     drawSun();
@@ -318,7 +309,6 @@ void display() {
     drawTree(630, 140);
     drawTree(710, 140);
 
-
     drawBusStopSign(170, 90);
     drawPersonShapes(200, 92, 0.2f, 0.3f, 0.8f);
 
@@ -329,41 +319,18 @@ void display() {
     drawBusStopZoneMarking(170);
     drawBusStopZoneMarking(470);
 
-
     float bus1X = -BUS_WIDTH + busOffset;
     float bus2X = -BUS_WIDTH + fmodf(busOffset + BUS_GAP, WIN_W + BUS_WIDTH);
     drawBus(bus1X, 15, BUS_WIDTH, BUS_HEIGHT, 0.85f, 0.15f, 0.15f);
     drawBus(bus2X, 15, BUS_WIDTH, BUS_HEIGHT, 0.9f, 0.55f, 0.1f);
-
-    glutSwapBuffers();
 }
 
-
-void animate(int value) {
+void updateScene1() {
+    using namespace Scene1;
     busOffset += BUS_SPEED;
     if (busOffset > WIN_W + BUS_WIDTH)
         busOffset -= (WIN_W + BUS_WIDTH);
-
-    glutPostRedisplay();
-    glutTimerFunc(16, animate, 0);
 }
 
-
-void init() {
-    glClearColor(1, 1, 1, 1);
-    glMatrixMode(GL_PROJECTION);
-    gluOrtho2D(0, 800, 0, 600);
+void keyboardScene1(unsigned char key) {
 }
-
-int main(int argc, char** argv) {
-    glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
-    glutInitWindowSize(800, 600);
-    glutCreateWindow("City Street Scene - Animated");
-    init();
-    glutDisplayFunc(display);
-    glutTimerFunc(0, animate, 0);
-    glutMainLoop();
-    return 0;
-}
-*/
